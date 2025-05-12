@@ -1,0 +1,55 @@
+r = int(input("Masukkan jumlah baris kursi: "))
+c = int(input("Masukkan jumlah kolom kursi: ")) 
+
+while r and c < 4:
+    print("Ukuran minimal bioskop adalah 4x4! silahkan masukkan angka ulang!\n")
+    r = int(input("Masukkan jumlah baris kursi: "))
+    c = int(input("Masukkan jumlah kolom kursi: ")) 
+
+print("---------------------------------------")
+print("---------Layout Kursi Bioskop----------")
+print("---------------------------------------")
+
+nomor = 1
+kursi_terpesan = set()
+for i in range(1,r+1):
+    for j in range(1,c+1):
+        print(f"{nomor}", end="\t")
+        nomor+=1
+    print()    
+
+print("---------------------------------------")
+print("------------PEMESANAN KURSI------------")
+print("---------------------------------------")    
+
+while True:
+    np = int(input("\nMasukkan kursi yang ingin dipesan: "))
+
+    if np == 0:
+        break
+
+    if np < 1 or np > r*c:
+        print("Nomor kursi tidak valid, silahkan pesan kursi lain")
+        continue
+
+    if np in kursi_terpesan:
+            print("Kursi telah dipesan. Pilih kursi lain!")
+            continue
+
+    kursi_terpesan.add(np)
+    print(f"Kursi {np} berhasil dipesan\n")
+
+    nomor = 1
+    for i in range(1,r+1):
+        for j in range(1,c+1):
+            if nomor in kursi_terpesan:
+                np = "X"
+                print(np, end="\t")  
+            else:
+                print(nomor, end="\t")
+            nomor+=1     
+        print()  
+    print("\nIngin memesan kursi lagi?")
+    print("Ketik 0 jika tidak")
+    
+print("\n Terimakasih telah memesan tiket")
