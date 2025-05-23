@@ -1,0 +1,272 @@
+n = int(input("n = "))
+m = int(input("m = "))
+
+a = []
+for i in range (n):
+    baris = []
+    for j in range (m):
+        entri = int(input(f"A{i}{j}= "))
+        baris.append(entri)
+    a.append(baris)
+print()
+
+for i in range(n):
+    for j in range(m):
+        print(a[i][j], end=" ")
+    print()
+print()
+
+p = int(input("p = "))
+q = int(input("q = "))
+
+b = []
+for i in range (p):
+    baris = []
+    for j in range (q):
+        entri = int(input(f"B{i}{j}= "))
+        baris.append(entri)
+    b.append(baris)
+print()
+
+for i in range(p):
+    for j in range(q):
+        print(b[i][j], end=" ")
+    print()
+print()
+
+print("---------------------------------------")
+print("-----------KALKULATOR MATRIKS----------")
+print("---------------------------------------\n")
+
+print('''1. Penjumlahan Matriks
+2. Pengurangan Matriks
+3. Perkalian Matriks
+4. Determinan Matriks
+5. Invers Matriks
+6. Transpose Matriks\n''')
+
+while True:
+    pilih = int(input("\nPilih Menu Kalkulator Matriks = "))
+
+    if pilih == 1:
+        if n == p and m == q:
+            penjumlahan = []
+            for i in range(n):
+                baris = []
+                for j in range(m):
+                    entri = a[i][j]+b[i][j]
+                    baris.append(entri)
+                penjumlahan.append(baris)
+            print("\nA + B = ")
+            for i in range(n):
+                for j in range(m):
+                    print(penjumlahan[i][j], end=" ")
+                print()
+        else:
+            print("Penjumlahan tidak bisa dilakukan pada matriks ini")
+    elif pilih == 2:
+        if n == p and m == q:    
+            pengurangan1 = []
+            for i in range(n):
+                baris = []
+                for j in range(m):
+                    entri = a[i][j]-b[i][j]
+                    baris.append(entri)
+                pengurangan1.append(baris)
+            print("\nA-B = ")
+            for i in range(n):
+                for j in range(m):
+                    print(pengurangan1[i][j], end=" ")
+                print()
+            pengurangan2 = []
+            for i in range(n):
+                baris = []
+                for j in range(m):
+                    entri = b[i][j]-a[i][j]
+                    baris.append(entri)
+                pengurangan2.append(baris)
+            print("\nB-A= ")
+            for i in range(n):
+                for j in range(m):
+                    print(pengurangan2[i][j], end=" ")
+                print() 
+        else:
+            print("\nPengurangan tidak bisa dilakukan pada matriks ini")
+    elif pilih == 3:
+        if m == p:
+            perkalian1 = []
+            for i in range (n):
+                baris = []
+                for j in range (q):
+                    entri = 0
+                    for k in range (m):
+                        entri += a[i][k]*b[k][j]
+                    baris.append(entri)
+                perkalian1.append(baris)
+            print("\nA x B = ")
+            for i in range(n):
+                for j in range(q):
+                    print(perkalian1[i][j], end=" ")
+                print()
+        else:
+            print("\nPerkalian tidak bisa dilakukan pada matriks A x B")
+        perkalian2 = []
+        if q == n: 
+            for i in range(p):
+                baris = []
+                for j in range(m):
+                    entri = 0
+                    for k in range(q):
+                        entri += b[i][k]*a[k][j]
+                    baris.append(entri)
+                perkalian2.append(baris)
+            print("\nB x A = ")
+            for i in range(p):
+                for j in range(m):
+                    print(perkalian2[i][j], end=" ")
+                print()
+        else:
+            print("\nPerkalian tidak bisa dilakukan pada matriks B x A")
+    elif pilih == 4:
+        if n != m:
+            print("\nDeterminan hanya bisa dilakukan untuk matriks yang berukuran sama")
+        elif n == 2:
+            det = a[0][0]*a[1][1]-a[0][1]*a[1][0]
+            print(f"\nDeterminan A = {det}")
+        elif n == 3:
+            det = (
+        a[0][0]*a[1][1]*a[2][2] +
+        a[0][1]*a[1][2]*a[2][0] +
+        a[0][2]*a[1][0]*a[2][1] -
+        a[0][2]*a[1][1]*a[2][0] -
+        a[0][0]*a[1][2]*a[2][1] -
+        a[0][1]*a[1][0]*a[2][2]
+    )
+            print(f"\nDeterminan A = {det}")
+        else:
+            print("\nUkuran terlalu besar")
+        if p != q:
+            print("\nDeterminan hanya bisa dilakukan untuk matriks yang berukuran sama")
+        elif p == 2:
+            det = b[0][0]*b[1][1]-b[0][1]*b[1][0]
+            print(f"\nDeterminan B = {det}")
+        elif p == 3:
+            det = (
+        b[0][0]*b[1][1]*b[2][2] +
+        b[0][1]*b[1][2]*b[2][0] +
+        b[0][2]*b[1][0]*b[2][1] -
+        b[0][2]*b[1][1]*b[2][0] -
+        b[0][0]*b[1][2]*b[2][1] -
+        b[0][1]*b[1][0]*b[2][2])
+            print(f"\nDeterminan B = {det}")
+        else:
+            print("\nUkuran terlalu besar")   
+    elif pilih == 5:
+        if n != m:
+            print("\nInvers hanya bisa dilakukan untuk matriks persegi.")
+        elif n == 2:
+            det = a[0][0]*a[1][1] - a[0][1]*a[1][0]
+            if det == 0:
+                print("\nMatriks tidak memiliki invers karena determinannya nol.")
+            else:
+                print("\nInvers dari matriks A:")
+                print(round(a[1][1]/det, 2), round(-a[0][1]/det, 2))
+                print(round(-a[1][0]/det, 2), round(a[0][0]/det, 2))
+        elif n == 3:
+            det = (
+            a[0][0]*a[1][1]*a[2][2] +
+            a[0][1]*a[1][2]*a[2][0] +
+            a[0][2]*a[1][0]*a[2][1] -
+            a[0][2]*a[1][1]*a[2][0] -
+            a[0][0]*a[1][2]*a[2][1] -
+            a[0][1]*a[1][0]*a[2][2] )
+            if det == 0:
+                print("\nMatriks tidak memiliki invers karena determinannya nol")     
+            else:
+                kof = []
+                kof.append ([
+                        (a[1][1]*a[2][2] - a[1][2]*a[2][1]),
+                        -(a[1][0]*a[2][2] - a[1][2]*a[2][0]),
+                        (a[1][0]*a[2][1] - a[1][1]*a[2][0])])
+                kof.append([
+                        -(a[0][1]*a[2][2] - a[0][2]*a[2][1]),
+                        (a[0][0]*a[2][2] - a[0][2]*a[2][0]),
+                        -(a[0][0]*a[2][1] - a[0][1]*a[2][0])])
+                kof.append([
+                        (a[0][1]*a[1][2] - a[0][2]*a[1][1]),
+                        -(a[0][0]*a[1][2] - a[0][2]*a[1][0]),
+                        (a[0][0]*a[1][1] - a[0][1]*a[1][0])])
+                adjoin = []
+                for i in range(3):
+                    baris = []
+                    for j in range(3):
+                        baris.append(kof[j][i])
+                    adjoin.append(baris)
+                print("\nInvers dari A = ")
+                for i in range(3):
+                    for j in range(3):
+                        print(round(adjoin[i][j]/det, 2), end=" ")
+                    print()
+        else:
+            print("\nUkuran Terlalu Besar")
+        if p != q:
+            print("\nInvers hanya bisa dilakukan untuk matriks persegi.")
+        elif p == 2:
+            det = b[0][0]*b[1][1] - b[0][1]*b[1][0]
+            if det == 0:
+                print("\nMatriks tidak memiliki invers karena determinannya nol.")
+            else:
+                print("\nInvers dari matriks B:")
+                print(round(b[1][1]/det, 2), round(-b[0][1]/det, 2))
+                print(round(-b[1][0]/det, 2), round(b[0][0]/det, 2))
+        elif p == 3:
+            det = (
+            b[0][0]*b[1][1]*b[2][2] +
+            b[0][1]*b[1][2]*b[2][0] +
+            b[0][2]*b[1][0]*b[2][1] -
+            b[0][2]*b[1][1]*b[2][0] -
+            b[0][0]*b[1][2]*b[2][1] -
+            b[0][1]*b[1][0]*b[2][2] )
+            if det == 0:
+                print("\nMatriks tidak memiliki invers karena determinannya nol")     
+            else:
+                kof = []
+                kof.append ([
+                        (b[1][1]*b[2][2] - b[1][2]*b[2][1]),
+                        -(b[1][0]*b[2][2] - b[1][2]*b[2][0]),
+                        (b[1][0]*b[2][1] - b[1][1]*b[2][0])])
+                kof.append([
+                        -(b[0][1]*b[2][2] - b[0][2]*b[2][1]),
+                        (b[0][0]*b[2][2] - b[0][2]*b[2][0]),
+                        -(b[0][0]*b[2][1] - b[0][1]*b[2][0])])
+                kof.append([
+                        (b[0][1]*b[1][2] - b[0][2]*b[1][1]),
+                        -(b[0][0]*b[1][2] - b[0][2]*b[1][0]),
+                        (b[0][0]*b[1][1] - b[0][1]*b[1][0])])
+                adjoin = []
+                for i in range(3):
+                    baris = []
+                    for j in range(3):
+                        baris.append(kof[j][i])
+                    adjoin.append(baris)
+                print("\nInvers dari B = ")
+                for i in range(3):
+                    for j in range(3):
+                        print(round(adjoin[i][j]/det, 2), end=" ")
+                    print()
+        else:
+            print("\nUkuran Terlalu Besar")
+    elif pilih == 6:
+        print("\nTranpose A = ")
+        for j in range (m):
+            for i in range (n):
+                print(a[i][j], end=" ")
+            print()
+        print("\nTranspose B = ")
+        for j in range (q):
+            for i in range (p):
+                print(b[i][j], end=" ")
+            print()
+    else:
+        print("Terimakasih Sudah Menggunakan Kalkulator Matriks")
+        break
