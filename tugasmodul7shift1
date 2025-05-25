@@ -1,0 +1,78 @@
+def input_mahasiswa ():
+    jumlah = int(input("Masukkan Jumlah Mahasiswa: "))
+    data_mahasiswa = []
+
+    for i in range (1, jumlah+1):
+        print(f"\nData mahasiswa ke {i} ")
+        nama = input("Nama           : ")
+        nim = int(input("NIM            : "))
+        uts = float(input("Nilai UTS      : "))
+        uas = float(input("Nilai UAS      : "))
+        tugas = float(input("Nilai Tugas    : "))
+        na = (0.35*uts) + (0.35*uas) + (0.30*tugas)
+
+        mahasiswa = [nama, nim, uts, uas, tugas, na]
+        data_mahasiswa.append(mahasiswa)
+    return data_mahasiswa
+
+def rata_uts (data_mahasiswa):
+    total_uts = 0
+    for i in data_mahasiswa:
+        total_uts += i[2]
+    ratauts = total_uts / len(data_mahasiswa)
+    return ratauts
+
+def rata_uas (data_mahasiswa):
+    total_uas = 0
+    for i in data_mahasiswa:
+        total_uas += i[3]
+    ratauas = total_uas  / len(data_mahasiswa)
+    return ratauas
+
+def rata_tugas (data_mahasiswa):
+    total_tugas = 0
+    for i in data_mahasiswa:
+        total_tugas += i[4]
+    ratatugas = total_tugas / len(data_mahasiswa)
+    return ratatugas
+
+def rata_na (data_mahasiswa):
+    total_na = 0
+    for i in data_mahasiswa:
+        total_na += i[5]
+    rataakhir = total_na / len(data_mahasiswa)
+    return rataakhir
+
+def peringkat (data_mahasiswa):
+    data_urut = []
+    for i in data_mahasiswa:
+        data_urut.append(i)
+    n = len(data_urut)
+    for i in range (n-1):
+        for j in range (n-1-i):
+            if data_urut[j][5] < data_urut[j+1][5]:
+                tukar = data_urut [j]
+                data_urut [j] = data_urut [j+1]
+                data_urut [j+1] = tukar
+    return data_urut
+
+def tabel (data_mahasiswa, ratauts, ratauas, ratatugas, rataakhir):
+    print("\nDAFTAR NILAI MAHASISWA")
+    print("="*100)
+    print(f"{'No':<3} | {'Nama':<15} | {'NIM':<15} | {'UTS':<7} | {'UAS':<7} | {'Tugas':<7} | {'Nilai Akhir':<13} | {'Peringkat':<9}")
+    print("="*100)
+
+    for i in range(len(data_mahasiswa)):
+        mhs = data_mahasiswa[i]
+        print(f"{i+1:<3} | {mhs[0]:<15} | {mhs[1]:<15} | {mhs[2]:<7.2f} | {mhs[3]:<7.2f} | {mhs[4]:<7.2f} | {mhs[5]:<13.2f} | {i+1:<9}")
+    print("=" * 100)
+    print(f"{'':<39} | {ratauts:<7.2f} | {ratauas:<7.2f} | {ratatugas:<7.2f} | {rataakhir:<13.2f}")
+    print("=" * 100)
+
+data_kelas = input_mahasiswa()
+ratauts = rata_uts (data_kelas)
+ratauas = rata_uas (data_kelas)
+ratatugas = rata_tugas(data_kelas)
+rataakhir = rata_na(data_kelas)
+data_urut = peringkat(data_kelas)
+tabel(data_urut, ratauts, ratauas, ratatugas, rataakhir)
