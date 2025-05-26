@@ -1,0 +1,56 @@
+def input_mahasiswa ():
+    jumlah = int(input("Masukkan Jumlah Mahasiswa: "))
+    data_mahasiswa = []
+
+    for i in range (1, jumlah+1):
+        print(f"\nData mahasiswa ke {i} ")
+        nama = input("Nama           : ")
+        nim = int(input("NIM            : "))
+        uts = float(input("Nilai UTS      : "))
+        uas = float(input("Nilai UAS      : "))
+        tugas = float(input("Nilai Tugas    : "))
+        na = (0.35*uts) + (0.35*uas) + (0.30*tugas)
+        mahasiswa = [nama, nim, uts, uas, tugas, na]
+        data_mahasiswa.append(mahasiswa)
+    return data_mahasiswa
+
+def rata (data_mahasiswa, indeks):
+    total = 0
+    for i in data_mahasiswa:
+        total += i[indeks]
+    rata = total / len(data_mahasiswa)
+    return rata
+
+def peringkat (data_mahasiswa):
+    data_urut = []
+    for i in data_mahasiswa:
+        data_urut.append(i)
+    n = len(data_urut)
+    for i in range (n-1):
+        for j in range (n-1-i):
+            if data_urut[j][5] < data_urut[j+1][5]:
+                tukar = data_urut [j]
+                data_urut [j] = data_urut [j+1]
+                data_urut [j+1] = tukar
+    return data_urut
+
+def tabel (data_mahasiswa, ratauts, ratauas, ratatugas, rataakhir):
+    print("\nDAFTAR NILAI MAHASISWA")
+    print("="*100)
+    print(f"{'No':<3} | {'Nama':<15} | {'NIM':<15} | {'UTS':<7} | {'UAS':<7} | {'Tugas':<7} | {'Nilai Akhir':<13} | {'Peringkat':<9}")
+    print("="*100)
+
+    for i in range(len(data_mahasiswa)):
+        mhs = data_mahasiswa[i]
+        print(f"{i+1:<3} | {mhs[0]:<15} | {mhs[1]:<15} | {mhs[2]:<7.2f} | {mhs[3]:<7.2f} | {mhs[4]:<7.2f} | {mhs[5]:<13.2f} | {i+1:<9}")
+    print("=" * 100)
+    print(f"{'':<39} | {ratauts:<7.2f} | {ratauas:<7.2f} | {ratatugas:<7.2f} | {rataakhir:<13.2f}")
+    print("=" * 100)
+
+data_kelas = input_mahasiswa()
+ratauts = rata (data_kelas, 2)
+ratauas = rata(data_kelas, 3)
+ratatugas = rata(data_kelas, 4)
+rataakhir = rata(data_kelas, 5)
+data_urut = peringkat(data_kelas)
+tabel(data_urut, ratauts, ratauas, ratatugas, rataakhir)
