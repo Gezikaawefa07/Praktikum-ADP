@@ -1,0 +1,22 @@
+import os
+os.system ('cls')
+from termcolor import colored,cprint
+import time
+
+def ikon():
+    red = colored("  ", 'white', 'on_red')
+    green = colored("  ", 'white', 'on_green')
+    blue = colored("  ", 'white', 'on_blue')
+    yellow = colored("  ", 'white', 'on_yellow')
+    print("Windows")
+    print(f"{red}{green}")
+    print(f"{blue}{yellow}")
+
+for i in range (100):
+    os.system('cls')
+    ikon()
+    print("loading...")
+    cprint(" "*i,'white',"on_blue",end="")
+    print(f'{i}%')
+    time.sleep(0.05)
+    os.system('cls')
