@@ -1,0 +1,604 @@
+import os
+import pygame
+import random
+import sys
+import tkinter as tk
+from datetime import datetime, timedelta
+from termcolor import cprint
+from rich.console import Console
+from rich.table import Table
+from rich.theme import Theme
+from rich import box
+from time import sleep
+import threading
+import time
+
+# Tema warna
+custom_theme = Theme({
+    "header": "bold #6B4226 on #BFA6A0",
+    "row_even": "bold #6B4226 on #BFA6A0",
+    "row_odd": "bold #6B4226 on #BFA6A0",
+})
+console = Console(theme=custom_theme)
+
+motivasi_list = [
+    "Disiplin itu mengerjakan hal hal yang kita benci seolah kita suka",
+    "Kalau kamu merasa salah jurusan, ingat pesan Zipy ini. “Jika nasi sudah jadi bubur, buatlah bubur yang enak. Tidak ada gunanya menangisi hal yang sudah terjadi”",
+    "Kamu gak butuh jadi sempurna besok. Kamu cuma butuh jadi 1% lebih baik hari ini daripada kemarin. Itu saja",
+    "Yang terpenting adalah jumlah bangun mu lebih banyak daripada jumlah jatuh mu",
+    "Ambil resikonya!! Berhasil kita rayakan, gagal kita setting ulang",
+    "Jangan berhenti karena sulit, justru disitulah cerita hebat mu dimulai",
+    "Konsisten itu jauh lebih mahal daripada ide cemerlang",
+    "Langkah kecil yang kamu lakukan setiap hari, suatu saat akan menjadi langkah yang besar",
+    "Walaupun hari ini terasa berat, jangan menyerah yaa..",
+    "Nanti kita rayakan perjalanan yang hebat ini. Jangan menyerah dulu!!",
+    "Peluk manis untuk kamu yang gak pernah nyerah dan selalu mengusahakan yang terbaik disetiap harinya. Semoga nilai UAS mu tinggi yaa",
+    "Hasil yang indah tidak terlahir dari langkah yang mudah",
+    "Jangan bandingkan dirimu dengan orang lain, karena itu tak akan pernah sama. Cukup bandingkan dirimu yang sekarang dengan dirimu yang sebelumnya",
+    "Kadang kita terlalu fokus melihat betapa luar biasanya orang-orang diluar sana. Padahal disaat yang bersamaan, kita tak kalah hebat",
+    "Kalau gak berusaha hari ini, siap siap aja jadi penonton kesuksesan orang lain besok"
+]
+
+def main_tebak_angka():
+    pygame.init()
+    WIDTH, HEIGHT = 600, 400
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("🎯 Tebak Angka - Zipy Game")
+    font = pygame.font.SysFont("Segoe UI", 28)
+    big_font = pygame.font.SysFont("Segoe UI", 48, bold=True)
+
+    angka_rahasia = random.randint(1, 1000)
+    tebakan = ""
+    feedback = "Tebak angka dari 1 - 1000"
+    warna_bg = (255, 240, 245)  # pastel pink
+
+    input_box = pygame.Rect(180, 220, 240, 40)
+    warna_input = pygame.Color('lightskyblue3')
+
+    clock = pygame.time.Clock()
+    active = False
+    selesai = False
+
+    while True:
+        screen.fill(warna_bg)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return  # kembali ke main saat game ditutup
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_box.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
+            if event.type == pygame.KEYDOWN:
+                if active and not selesai:
+                    if event.key == pygame.K_RETURN:
+                        if tebakan.isdigit():
+                            nilai = int(tebakan)
+                            if nilai < angka_rahasia:
+                                feedback = "Terlalu kecil! 🔼"
+                            elif nilai > angka_rahasia:
+                                feedback = "Terlalu besar! 🔽"
+                            else:
+                                feedback = "Benar! 🎉"
+                                selesai = True
+                        else:
+                            feedback = "Masukkan angka valid!"
+                        tebakan = ""
+                    elif event.key == pygame.K_BACKSPACE:
+                        tebakan = tebakan[:-1]
+                    else:
+                        if len(tebakan) < 6:
+                            tebakan += event.unicode
+
+        # Texts
+        judul = big_font.render("TEBAK ANGKA", True, (138, 43, 226))
+        instruksi = font.render(feedback, True, (90, 90, 90))
+        input_text = font.render(tebakan, True, (0, 0, 0))
+
+        # Draw
+        screen.blit(judul, (WIDTH // 2 - judul.get_width() // 2, 50))
+        screen.blit(instruksi, (WIDTH // 2 - instruksi.get_width() // 2, 130))
+
+        pygame.draw.rect(screen, warna_input, input_box, 2)
+        screen.blit(input_text, (input_box.x + 10, input_box.y + 5))
+
+        if selesai:
+            lanjut = font.render("Tekan ESC untuk keluar", True, (70, 70, 70))
+            screen.blit(lanjut, (WIDTH // 2 - lanjut.get_width() // 2, 300))
+
+        keys = pygame.key.get_pressed()
+        if selesai and keys[pygame.K_ESCAPE]:
+            pygame.quit()
+            return
+
+        pygame.display.flip()
+        clock.tick(30)
+
+def main_tebak_kata():
+    import pygame
+    import random
+
+    pygame.init()
+    WIDTH, HEIGHT = 800, 500
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("🌸 Tebak Kata - Zipy Game")
+    clock = pygame.time.Clock()
+
+    FONT = pygame.font.SysFont("Segoe UI", 28)
+    BIG_FONT = pygame.font.SysFont("Segoe UI", 48, bold=True)
+
+    # Warna
+    BG_COLOR = (255, 240, 250)
+    BOX_COLOR = (200, 220, 255)
+    TEXT_COLOR = (60, 30, 90)
+    ERROR_COLOR = (255, 100, 100)
+    SUCCESS_COLOR = (120, 220, 140)
+
+    # Kata & petunjuk
+    daftar_kata = [
+        {"kata": "lavender", "petunjuk": "Bunga ungu yang harum"},
+        {"kata": "mint", "petunjuk": "Daun penyegar napas"},
+        {"kata": "peach", "petunjuk": "Buah manis oranye pastel"},
+        {"kata": "babyblue", "petunjuk": "Warna langit cerah"},
+        {"kata": "pensil", "petunjuk": "Alat tulis"},
+        {"kata": "komputer", "petunjuk": "Alat untuk bekerja di kantor"},
+        {"kata": "buku", "petunjuk": "Tempat membaca dan menulis"},
+        {"kata": "matahari", "petunjuk": "Sumber cahaya alami terbesar"},
+        {"kata": "sepeda", "petunjuk": "Alat transportasi dengan dua roda"},
+        {"kata": "pelangi", "petunjuk": "Muncul setelah hujan, berwarna-warni"},
+        {"kata": "pisang", "petunjuk": "Buah berwarna kuning"},
+        {"kata": "hoodie", "petunjuk": "Pakaian yang dipakai pas musim dingin"},
+        {"kata": "mikroskop", "petunjuk": "Alat untuk melihat benda sangat kecil"},
+        {"kata": "cermin", "petunjuk": "Memantulkan bayangan"},
+        {"kata": "konduktor", "petunjuk": "Menghantarkan panas atau listrik"},
+        {"kata": "gravitasi", "petunjuk": "Gaya tarik antar benda bermassa"},
+        {"kata": "biologi", "petunjuk": "Ilmu yang mempelajari tentang makhluk hidup"},
+        {"kata": "parabola", "petunjuk": "grafik kuadrat"},
+        {"kata": "puisi", "petunjuk": "Karya sastra yang indah"},
+        {"kata": "kalkulator", "petunjuk": "Alat hitung elektronik"},
+        {"kata": "elektron", "petunjuk": "Partikel bermuatan negatif"},
+        {"kata": "singa", "petunjuk": "Raja hutan"},
+        {"kata": "reaksi", "petunjuk": "Perubahan kimia"},
+        {"kata": "satelit", "petunjuk": "Mengorbit planet"},
+        {"kata": "hipotesis", "petunjuk": "Dugaan awal dalam penelitian"},
+        {"kata": "termometer", "petunjuk": "Alat pengukur suhu"},
+        {"kata": "fotosintesis", "petunjuk": "Proses membuat makanan oleh tumbuhan"},
+        {"kata": "stetoskop", "petunjuk": "Alat untuk memeriksa detak jantung"},
+        {"kata": "cheetah", "petunjuk": "Hewan dengan lari cepat"},
+        {"kata": "anemia", "petunjuk": "Penyakit kekurangan darah"}
+    ]
+
+    soal = random.choice(daftar_kata)
+    kata_asli = soal["kata"]
+    tertebak = ["_" for _ in kata_asli]
+    tebakan_salah = []
+    kesempatan = 5
+    selesai = False
+    input_huruf = ""
+    pesan = "Tebak satu huruf"
+    bantuan_dipakai = False
+
+    input_box = pygame.Rect(100, 320, 60, 50)
+    active = False
+
+    while True:
+        screen.fill(BG_COLOR)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                active = input_box.collidepoint(event.pos)
+            if event.type == pygame.KEYDOWN:
+                if selesai:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        return
+                elif active:
+                    if event.key == pygame.K_RETURN and input_huruf:
+                        huruf = input_huruf.lower()
+                        if huruf in ("?", "hint") and not bantuan_dipakai:
+                            belum_ditebak = [i for i, h in enumerate(tertebak) if h == "_"]
+                            if belum_ditebak:
+                                idx = random.choice(belum_ditebak)
+                                tertebak[idx] = kata_asli[idx]
+                                pesan = f"💡 Bantuan: Huruf ke-{idx+1} adalah '{kata_asli[idx]}'"
+                                bantuan_dipakai = True
+                            else:
+                                pesan = "Semua huruf sudah terbuka!"
+                        elif not huruf.isalpha() or len(huruf) != 1:
+                            pesan = "Masukkan hanya satu huruf!"
+                        elif huruf in tertebak or huruf in tebakan_salah:
+                            pesan = f"'{huruf}' sudah ditebak."
+                        elif huruf in kata_asli:
+                            for i, h in enumerate(kata_asli):
+                                if h == huruf:
+                                    tertebak[i] = huruf
+                            pesan = f"✅ Huruf '{huruf}' benar!"
+                        else:
+                            tebakan_salah.append(huruf)
+                            kesempatan -= 1
+                            pesan = f"❌ Huruf '{huruf}' salah!"
+                        input_huruf = ""
+                    elif event.key == pygame.K_BACKSPACE:
+                        input_huruf = input_huruf[:-1]
+                    elif len(input_huruf) < 1 and event.unicode.isalpha():
+                        input_huruf += event.unicode
+
+        # Status selesai
+        if "_" not in tertebak:
+            selesai = True
+            pesan = "🎉 Selamat! Kamu Menang!"
+        elif kesempatan <= 0:
+            selesai = True
+            pesan = f"😢 Habis kesempatan! Kata: {kata_asli.upper()}"
+
+        # Teks dan Tampilan
+        judul = BIG_FONT.render("TEBAK KATA", True, TEXT_COLOR)
+        screen.blit(judul, (WIDTH//2 - judul.get_width()//2, 30))
+
+        petunjuk = FONT.render(f"Petunjuk: {soal['petunjuk']}", True, TEXT_COLOR)
+        screen.blit(petunjuk, (50, 100))
+
+        kata_teks = BIG_FONT.render(" ".join(tertebak), True, TEXT_COLOR)
+        screen.blit(kata_teks, (WIDTH//2 - kata_teks.get_width()//2, 160))
+
+        kesempatan_teks = FONT.render(f"Kesempatan: {kesempatan}", True, TEXT_COLOR)
+        screen.blit(kesempatan_teks, (50, 230))
+
+        salah_teks = FONT.render(f"Salah: {', '.join(tebakan_salah)}", True, ERROR_COLOR)
+        screen.blit(salah_teks, (50, 270))
+
+        msg_color = SUCCESS_COLOR if "✅" in pesan or "🎉" in pesan else ERROR_COLOR if "❌" in pesan or "😢" in pesan else TEXT_COLOR
+        pesan_teks = FONT.render(pesan, True, msg_color)
+        screen.blit(pesan_teks, (WIDTH//2 - pesan_teks.get_width()//2, 400))
+
+        pygame.draw.rect(screen, BOX_COLOR, input_box, border_radius=8)
+        input_teks = BIG_FONT.render(input_huruf.upper(), True, TEXT_COLOR)
+        screen.blit(input_teks, (input_box.x + 10, input_box.y + 5))
+
+        if selesai:
+            keluar = FONT.render("Tekan ESC untuk kembali", True, TEXT_COLOR)
+            screen.blit(keluar, (WIDTH//2 - keluar.get_width()//2, 450))
+
+        pygame.display.flip()
+        clock.tick(30)
+
+class CountdownApp:
+    def __init__(self, root, menit, kegiatan, motivasi = None):
+        self.root = root
+        self.menit = menit
+        self.kegiatan = kegiatan
+        self.total_detik = menit * 60
+        self.running = True
+        self.after_id = None
+        self.motivasi = motivasi
+
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
+        if motivasi:
+            # Hapus semua widget di window dan tampilkan motivasi dulu
+            for widget in root.winfo_children():
+                widget.destroy()
+
+            self.label_motivasi = tk.Label(root, text=motivasi, font=("Helvetica", 12, "italic"),
+                                           wraplength=280, bg="#FBEAFF", fg="#6B4226", justify="center", padx=10, pady=20)
+            self.label_motivasi.pack()
+
+            self.start_button = tk.Button(root, text="Siap Belajar!", font=("Helvetica", 12, "bold"),
+                                          command=self.mulai_countdown, bg="#6B4226", fg="white", padx=20, pady=5)
+            self.start_button.pack(pady=10)
+        else:
+            self.tampilkan_ui()
+            self.countdown()
+
+    def tampilkan_ui(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+        self.root.configure(bg="#BFA6A0")
+
+        self.label_kegiatan = tk.Label(self.root, text=self.kegiatan, font=("Helvetica", 14, "bold"),
+                                       bg="#BFA6A0", fg="#6B4226")
+        self.label_kegiatan.pack(pady=(30, 10))
+
+        self.label_waktu = tk.Label(self.root, text="", font=("Helvetica", 32, "bold"),
+                                    bg="#BFA6A0", fg="#6B4226")
+        self.label_waktu.pack(pady=10)
+
+        self.skip_button = tk.Button(self.root, text="⏩ Skip", font=("Helvetica", 12, "bold"),
+                                     command=self.skip, bg="#6B4226", fg="white", padx=20, pady=5)
+        self.skip_button.pack(pady=(10, 20))
+
+        if "Istirahat" in self.kegiatan or "(break)" in self.kegiatan.lower():
+            self.game_button = tk.Button(self.root, text="🎮 Main Game", font=("Helvetica", 12, "bold"),
+                                         command=self.buka_game, bg="#6B4226", fg="white", padx=20, pady=5)
+            self.game_button.pack(pady=(0, 10))
+        
+        self.countdown()
+
+    def mulai_countdown(self):
+        self.tampilkan_ui()
+        self.countdown()
+    
+    def buka_game(self):
+        game_root = tk.Toplevel(self.root)
+        game_root.title("Main Dulu Yuk!")
+        tk.Label(game_root, text="Pilih Game Break", font=("Helvetica", 14, "bold")).pack(pady=10)
+        tk.Button(game_root, text="🎯 Tebak Angka", font=("Helvetica", 12),
+              command=lambda: [game_root.destroy(), main_tebak_angka()]).pack(pady=5)
+        tk.Button(game_root, text="🧠 Tebak Kata", font=("Helvetica", 12),
+              command=lambda: [game_root.destroy(), main_tebak_kata()]).pack(pady=5)
+        tk.Button(game_root, text="⏩ Gak Jadi Main", font=("Helvetica", 12),
+              command=game_root.destroy).pack(pady=5)
+
+    def countdown(self):
+        if self.total_detik > 0 and self.running:
+            menit_detik = str(timedelta(seconds=self.total_detik))
+            if self.total_detik < 60:
+                menit_detik = f"0:{self.total_detik:02}"
+            self.label_waktu.config(text=menit_detik)
+            self.total_detik -= 1
+            self.after_id = self.root.after(1000, self.countdown) # Panggil diri sendiri tiap detik
+        elif self.running:
+            self.label_waktu.config(text="Selesai!")
+            self.label_kegiatan.config(text="⏰ Waktu selesai!")
+
+    def skip(self):
+        self.running = False
+        if self.after_id:
+            self.root.after_cancel(self.after_id)
+        self.root.after(0, self.label_waktu.config, {"text": "⏩ Di-skip!"})
+        self.root.after(0, self.label_kegiatan.config, {"text": "Menuju kegiatan berikutnya..."})
+        self.root.after(500, self.root.destroy)  # beri delay sedikit agar bisa terlihat
+
+    def on_close(self):
+        self.running = False  # supaya countdown berhenti dan .after tidak dipanggil lagi
+        if self.after_id:
+            self.root.after_cancel(self.after_id)
+        self.root.destroy()
+
+# Fungsi cek azan di tengah sesi
+def cek_ada_azan_di_tengah(start_time, durasi):
+    hasil = []
+    end_time = start_time + timedelta(minutes=durasi)
+    for waktu_str, (label, durasi_azan) in jadwal_break.items():
+        waktu_obj = datetime.strptime(waktu_str, "%H:%M").replace(
+            year=start_time.year, month=start_time.month, day=start_time.day
+        )
+        if start_time < waktu_obj < end_time:
+            hasil.append((waktu_obj, label, durasi_azan))
+    return hasil if hasil else None
+
+# Waktu-waktu penting
+jadwal_break = {
+    "04:53": ("Sholat Subuh", 15),
+    "07:00": ("Mandi & Sarapan", 45),
+    "12:19": ("Sholat Zuhur & Makan Siang", 30),
+    "15:44": ("Sholat Ashar & Mandi Sore", 30),
+    "18:21": ("Sholat Maghrib & Makan Malam", 30),
+    "19:36": ("Sholat Isya", 15)
+}
+
+# Mulai program
+os.system('cls')
+print("Hai, Selamat datang di aplikasi UAS Master. Aku Zipy yang akan menemani persiapan UAS kamu hari ini.")
+cprint("\nTekan Enter untuk melanjutkan...", "yellow")
+input()
+
+os.system('cls')
+print("Siapa nama murid Zipy kali ini?")
+nama = input()
+
+os.system('cls')
+print(f"Salam kenal {nama}! {nama}, mau belajar apa nih hari ini?")
+matkul = input()
+
+os.system('cls')
+print(f"Asikkk😍 Sebelum mulai belajar, Zipy mau tau dulu nih. Nilai UTS {matkul} {nama} kemaren berapa?")
+nilai_uts = int(input())
+
+# Materi
+os.system('cls')
+print("Masukkan materi-materi yang akan kita pelajari (ketik 'selesai' jika sudah):")
+materi_list = []
+i = 1
+while True:
+    materi = input(f"Materi {i}: ")
+    i += 1
+    if materi.lower() == "selesai":
+        break
+    materi_list.append(materi)
+
+# Pembagian waktu
+os.system('cls')
+max_waktu_belajar = 480  # 8 jam
+bagi_per_8 = lambda lst: [lst[i:i+8] for i in range(0, len(lst), 8)]
+if len(materi_list) > 8:
+    console.print(f"Materi kamu ada {len(materi_list)}. Lebih dari 8 materi.", style="red")
+    pilihan = input("Mau selesaikan semua hari ini atau lanjut besok? (ya/tidak): ")
+    if pilihan.lower() == 'ya':
+        waktu_per_materi = max_waktu_belajar // len(materi_list)
+        grup_materi = [materi_list]
+    else:
+        print("\nBaik! Kita fokus belajar 8 materi dulu hari ini ya.")
+        grup_materi = bagi_per_8(materi_list)
+        waktu_per_materi = 60
+else:
+    waktu_per_materi = 60
+    grup_materi = [materi_list]
+
+# Pola belajar dan break
+os.system('cls')
+if 75 <= nilai_uts <= 100:
+    belajar_menit = waktu_per_materi * 5 // 6
+    break_menit = waktu_per_materi - belajar_menit
+    pola = [(belajar_menit, break_menit)]
+    print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}. {pola[0][0]} menit belajar kemudian {pola[0][1]} menit break")
+elif 50 <= nilai_uts < 75:
+    if waktu_per_materi == 60:
+        pola = [(25, 5), (25, 5)]
+        print("Kita akan gunakan pola belajar 25-5-25-5. 25 menit pertama akan digunakan untuk belajar. Lalu 5 menit setelahnya istirahat. Setelahnya, lanjut lagi belajar 25 menit, kemudian istirahat lagi 5 menit")
+    else:
+        belajar = int((25/60)*waktu_per_materi)
+        istirahat = int((5/60)*waktu_per_materi)
+        pola = [(belajar, istirahat), (belajar, istirahat)]
+        print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}-{pola[1][0]}-{pola[1][1]}. {pola[0][0]} menit pertama akan digunakan untuk belajar. Lalu {pola[0][1]} menit setelahnya istirahat. Setelahnya, lanjut lagi belajar {pola[1][0]} menit, kemudian istirahat lagi {pola[1][1]} menit")
+else:
+    if waktu_per_materi == 60:
+        pola = [(25, 5), (20, 10)]
+        print("Kita akan gunakan pola belajar 25-5-20-10. 25 menit pertama akan digunakan untuk belajar. Lalu 5 menit setelahnya istirahat. Setelahnya, lanjut belajar 20 menit, kemudian istirahat 10 menit")
+    else:
+        belajar1 = int((25/60)*waktu_per_materi)
+        istirahat1 = int((5/60)*waktu_per_materi)
+        belajar2 = int((20/60)*waktu_per_materi)
+        istirahat2 = int((10/60)*waktu_per_materi)
+        pola = [(belajar1, istirahat1), (belajar2, istirahat2)]
+        print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}-{pola[1][0]}-{pola[1][1]}. {pola[0][0]} menit pertama akan digunakan untuk belajar. Lalu {pola[0][1]} menit setelahnya istirahat. Setelahnya, lanjut belajar {pola[1][0]} menit, kemudian istirahat {pola[1][1]} menit")
+
+# Input jam mulai
+console.print("Sekarang ayo kita atur jam mulai belajar Hari 1.", style="cyan")
+jam_mulai_str = input("Masukkan jam mulai belajar Hari 1 (format Jam:Menit, contoh 08:00): ")
+jam_mulai = datetime.strptime(jam_mulai_str, "%H:%M")
+
+# Loop tiap hari
+os.system('cls')
+list_sesi = []
+for hari, materi_hari_ini in enumerate(grup_materi, 1):
+    list_sesi = []
+    if hari > 1:
+        os.system('cls')
+        console.print(f"Sekarang ayo kita atur jam mulai belajar Hari {hari}.", style="cyan")
+        jam_mulai_str = input(f"Masukkan jam mulai belajar Hari {hari} (format Jam:Menit, contoh 08:00): ")
+        jam_mulai = datetime.strptime(jam_mulai_str, "%H:%M")
+
+    current_time = jam_mulai
+
+    table = Table(
+        title=f"📚 Hari {hari} - Rencana Belajar {nama} untuk {matkul} 📚",
+        title_style="bold white on #6B4226",
+        box=box.DOUBLE,
+        show_lines=True,
+        border_style="white"
+    )
+    table.add_column("Kegiatan", header_style="header", justify="left", no_wrap=True)
+    table.add_column("Waktu", header_style="header", justify="center")
+    table.add_column("Ceklis", header_style="header", justify="center")
+
+    sesi = 1
+    row_index = 0
+    for materi in materi_hari_ini:
+        for belajar, istirahat in pola:
+            azan_di_tengah = cek_ada_azan_di_tengah(current_time, belajar)
+            if azan_di_tengah:
+                for waktu_azan, label, durasi in azan_di_tengah:
+                    sebelum_azan = int((waktu_azan - current_time).total_seconds() // 60)
+                    jam_selesai_1 = current_time + timedelta(minutes=sebelum_azan)
+                    waktu_format_1 = f"{current_time.strftime('%H:%M')} - {jam_selesai_1.strftime('%H:%M')}"
+                    table.add_row(f"Materi {sesi}: {materi}", waktu_format_1, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                    list_sesi.append((f"Belajar Materi {sesi}: {materi}", current_time, jam_selesai_1, False))
+                    row_index += 1
+
+                    waktu_azan_beres = jam_selesai_1 + timedelta(minutes=durasi)
+                    waktu_format_azan = f"{jam_selesai_1.strftime('%H:%M')} - {waktu_azan_beres.strftime('%H:%M')}"
+                    table.add_row(f"{label} (break)", waktu_format_azan, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                    list_sesi.append((f"{label} (break)", jam_selesai_1, waktu_azan_beres, False))
+                    row_index += 1
+
+                    current_time = waktu_azan_beres
+
+                    sisa = belajar - sebelum_azan
+                    if sisa > 0:
+                        jam_selesai_2 = current_time + timedelta(minutes=sisa)
+                        waktu_format_2 = f"{current_time.strftime('%H:%M')} - {jam_selesai_2.strftime('%H:%M')}"
+                        table.add_row(f"Materi {sesi}: {materi}", waktu_format_2, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                        list_sesi.append((f"Belajar Materi {sesi}: {materi}", current_time, jam_selesai_2, False))
+                        row_index += 1
+                        current_time = jam_selesai_2
+            else:
+                jam_selesai = current_time + timedelta(minutes=belajar)
+                waktu_format = f"{current_time.strftime('%H:%M')} - {jam_selesai.strftime('%H:%M')}"
+                table.add_row(f"Materi {sesi}: {materi}", waktu_format, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                list_sesi.append((f"Belajar Materi {sesi}: {materi}", current_time, jam_selesai, False))
+                row_index += 1
+                current_time = jam_selesai
+
+            # ✅ FIXED: Break yang bisa kena azan
+            azan_di_tengah_break = cek_ada_azan_di_tengah(current_time, istirahat)
+            if azan_di_tengah_break:
+                for waktu_azan, label, durasi in azan_di_tengah_break:
+                    sebelum_azan = int((waktu_azan - current_time).total_seconds() // 60)
+                    jam_selesai_1 = current_time + timedelta(minutes=sebelum_azan)
+                    waktu_format_1 = f"{current_time.strftime('%H:%M')} - {jam_selesai_1.strftime('%H:%M')}"
+                    table.add_row(f"(break)", waktu_format_1, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                    list_sesi.append(("Istirahat", current_time, jam_selesai_1, False))
+                    row_index += 1
+
+                    waktu_azan_beres = jam_selesai_1 + timedelta(minutes=durasi)
+                    waktu_format_azan = f"{jam_selesai_1.strftime('%H:%M')} - {waktu_azan_beres.strftime('%H:%M')}"
+                    table.add_row(f"{label} (break)", waktu_format_azan, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                    list_sesi.append((f"{label} (break)", jam_selesai_1, waktu_azan_beres, False))
+                    row_index += 1
+
+                    current_time = waktu_azan_beres
+
+                    sisa = istirahat - sebelum_azan
+                    if sisa > 0:
+                        jam_selesai_2 = current_time + timedelta(minutes=sisa)
+                        waktu_format_2 = f"{current_time.strftime('%H:%M')} - {jam_selesai_2.strftime('%H:%M')}"
+                        table.add_row(f"(break)", waktu_format_2, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                        list_sesi.append(("Istirahat", current_time, jam_selesai_2, False))
+                        row_index += 1
+                        current_time = jam_selesai_2
+            else:
+                jam_selesai_break = current_time + timedelta(minutes=istirahat)
+                waktu_break = f"{current_time.strftime('%H:%M')} - {jam_selesai_break.strftime('%H:%M')}"
+                table.add_row("(break)", waktu_break, "☐", style="row_even" if row_index % 2 == 0 else "row_odd")
+                list_sesi.append(("Istirahat", current_time, jam_selesai_break, False))
+                row_index += 1
+                current_time = jam_selesai_break
+
+        sesi += 1
+
+    os.system('cls')
+    console.print(table)
+    cprint("\nSesi Hari ini akan segera dimulai!", "cyan")
+    input("Tekan Enter jika kamu siap...")
+
+    sesi = 1
+    for i, (kegiatan, mulai, selesai_waktu, status_selesai) in enumerate(list_sesi):
+        durasi = int((selesai_waktu - mulai).total_seconds() // 60)
+        root = tk.Tk()
+        if "Belajar Materi" in kegiatan:
+            motivasi = random.choice(motivasi_list)
+        else:
+            motivasi = None
+        app = CountdownApp(root, durasi, kegiatan, motivasi)
+        root.mainloop()
+
+        # Setelah sesi selesai, tandai sebagai selesai ✅
+        list_sesi[i] = (kegiatan, mulai, selesai_waktu, True)
+
+        # Cetak ulang tabel dengan ceklis terupdate
+        os.system('cls')
+        table = Table(
+            title=f"📚 Hari {hari} - Progress Belajar {nama} untuk {matkul} 📚",
+            title_style="bold white on #6B4226",
+            box=box.DOUBLE,
+            show_lines=True,
+            border_style="white"
+        )
+        table.add_column("Kegiatan", header_style="header", justify="left", no_wrap=True)
+        table.add_column("Waktu", header_style="header", justify="center")
+        table.add_column("Ceklis", header_style="header", justify="center")
+
+        for k, mulai, selesai_waktu, s in list_sesi:
+            waktu_format = f"{mulai.strftime('%H:%M')} - {selesai_waktu.strftime('%H:%M')}"
+            table.add_row(k, waktu_format, "✅" if s else "☐", style="row_even")
+
+        console.print(table)
+        sleep(1)  # kasih jeda biar tabel kelihatan
+
+
+    
