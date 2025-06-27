@@ -37,13 +37,13 @@ motivasi_list = [
     "Kadang kita terlalu fokus melihat betapa luar biasanya orang-orang diluar sana. Padahal disaat yang bersamaan, kita tak kalah hebat",
     "Kalau gak berusaha hari ini, siap siap aja jadi penonton kesuksesan orang lain besok"
 ]
-def print_berjalan(teks, prefix=""):
+def print_berjalan(teks):
     hasil = ""
     for huruf in teks:
         hasil += huruf
-        print(f"{prefix}{hasil}", end="\r")
+        print(f"{hasil}", end="\r")
         sleep(0.05)
-    print(f"{prefix}{hasil}")  # Cetak akhir
+    print(f"{hasil}")  # Cetak akhir
 def countdown_terminal(durasi_menit, kegiatan, motivasi=None):
     os.system('cls')
     print_berjalan(f"⏰ Kegiatan: {kegiatan}")
