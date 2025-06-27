@@ -41,7 +41,7 @@ def print_berjalan(teks, prefix=""):
     hasil = ""
     for huruf in teks:
         hasil += huruf
-        print(f"{prefix}{hasil}", end="\r", flush = True)
+        print(f"{prefix}{hasil}", end="\r")
         sleep(0.05)
     print(f"{prefix}{hasil}")  # Cetak akhir
 def countdown_terminal(durasi_menit, kegiatan, motivasi=None):
