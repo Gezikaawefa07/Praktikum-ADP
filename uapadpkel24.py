@@ -15,11 +15,11 @@ custom_theme = Theme({
     "warna": "bold #6B4226 on #BFA6A0"
 })
 console = Console(theme=custom_theme)
-pasangan_warna = [{
+pasangan_warna = {
     "pink": "bold #C77A86 on #F7C5CC",
     "purple": "bold #A98DAF on #DCC6E0",
     "blue": "bold #5DA9B5 on #AED9E0",
-    "green": "bold #4C9A6A on #C2EDCE" }]
+    "green": "bold #4C9A6A on #C2EDCE" }
 motivasi_list = [
     "Disiplin itu mengerjakan hal hal yang kita benci seolah kita suka",
     "Kalau kamu merasa salah jurusan, ingat pesan Zipy ini. “Jika nasi sudah jadi bubur, buatlah bubur yang enak. Tidak ada gunanya menangisi hal yang sudah terjadi”",
@@ -49,7 +49,7 @@ def countdown_terminal(durasi_menit, kegiatan, motivasi=None):
     print_berjalan(f"⏰ Kegiatan: {kegiatan}")
     if motivasi:
         sleep(1)
-        warna = random.choice(list(pasangan_warna[0].values()))
+        warna = random.choice(list(pasangan_warna.values()))
         console.print(f"[{warna}]💌 Motivasi: {motivasi}[/]")
     sleep(1)
     input("\nTekan Enter untuk mulai timer...")
