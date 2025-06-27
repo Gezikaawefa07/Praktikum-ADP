@@ -50,7 +50,7 @@ def countdown_terminal(durasi_menit, kegiatan, motivasi=None):
     if motivasi:
         sleep(1)
         warna = random.choice(list(pasangan_warna.values()))
-        console.print(f"[{warna}]💌 Motivasi: {motivasi}[/]")
+        console.print(f"[{warna}]💌 Motivasi: {motivasi}")
     sleep(1)
     input("\nTekan Enter untuk mulai timer...")
     total_detik = durasi_menit * 60
