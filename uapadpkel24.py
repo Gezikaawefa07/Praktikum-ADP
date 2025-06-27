@@ -60,7 +60,6 @@ def countdown_terminal(durasi_menit, kegiatan, motivasi=None):
         skip_flag[0] = True
     # Jalankan listener Enter di thread terpisah
     t = threading.Thread(target=tunggu_enter)
-    t.daemon = True
     t.start()
     while total_detik > 0:
         if skip_flag[0]:
