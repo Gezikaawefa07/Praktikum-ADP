@@ -183,7 +183,7 @@ for hari, materi_hari_ini in enumerate(grup_materi, 1):
         show_lines=True,
         border_style="white"
     )
-    table.add_column("Kegiatan", header_style="warna", justify="left", no_wrap=True)
+    table.add_column("Kegiatan", header_style="warna", justify="left", no_wrap= False)
     table.add_column("Waktu", header_style="warna", justify="center")
     table.add_column("Ceklis", header_style="warna", justify="center")
     sesi = 1
@@ -193,16 +193,15 @@ for hari, materi_hari_ini in enumerate(grup_materi, 1):
             azan_di_tengah = cek_ada_azan_di_tengah(current_time, belajar)
             if azan_di_tengah:
                 for waktu_azan, label, durasi in azan_di_tengah:
-                    sebelum_azan = int((waktu_azan - current_time).total_seconds() // 60)
-                    jam_selesai_1 = current_time + timedelta(minutes=sebelum_azan)
-                    waktu_format_1 = f"{current_time.strftime('%H:%M')} - {jam_selesai_1.strftime('%H:%M')}"
+                    sebelum_azan = int((waktu_azan - current_time).total_seconds()//60)
+                    waktu_format_1 = f"{current_time.strftime('%H:%M')} - {waktu_azan.strftime('%H:%M')}"
                     table.add_row(f"Materi {sesi}: {materi}", waktu_format_1, "☐", style="warna")
-                    list_sesi.append((f"Belajar Materi {sesi}: {materi}", current_time, jam_selesai_1, False))
+                    list_sesi.append((f"Belajar Materi {sesi}: {materi}", current_time, waktu_azan, False))
                     row_index += 1
-                    waktu_azan_beres = jam_selesai_1 + timedelta(minutes=durasi)
-                    waktu_format_azan = f"{jam_selesai_1.strftime('%H:%M')} - {waktu_azan_beres.strftime('%H:%M')}"
+                    waktu_azan_beres = waktu_azan + timedelta(minutes=durasi)
+                    waktu_format_azan = f"{waktu_azan.strftime('%H:%M')} - {waktu_azan_beres.strftime('%H:%M')}"
                     table.add_row(f"{label} (break)", waktu_format_azan, "☐", style="warna")
-                    list_sesi.append((f"{label} (break)", jam_selesai_1, waktu_azan_beres, False))
+                    list_sesi.append((f"{label} (break)", waktu_azan, waktu_azan_beres, False))
                     row_index += 1
                     current_time = waktu_azan_beres
                     sisa = belajar - sebelum_azan
@@ -225,15 +224,14 @@ for hari, materi_hari_ini in enumerate(grup_materi, 1):
             if azan_di_tengah_break:
                 for waktu_azan, label, durasi in azan_di_tengah_break:
                     sebelum_azan = int((waktu_azan - current_time).total_seconds() // 60)
-                    jam_selesai_1 = current_time + timedelta(minutes=sebelum_azan)
-                    waktu_format_1 = f"{current_time.strftime('%H:%M')} - {jam_selesai_1.strftime('%H:%M')}"
+                    waktu_format_1 = f"{current_time.strftime('%H:%M')} - {waktu_azan.strftime('%H:%M')}"
                     table.add_row(f"(break)", waktu_format_1, "☐", style="warna")
-                    list_sesi.append(("Istirahat", current_time, jam_selesai_1, False))
+                    list_sesi.append(("Istirahat", current_time, waktu_azan, False))
                     row_index += 1
-                    waktu_azan_beres = jam_selesai_1 + timedelta(minutes=durasi)
-                    waktu_format_azan = f"{jam_selesai_1.strftime('%H:%M')} - {waktu_azan_beres.strftime('%H:%M')}"
+                    waktu_azan_beres = waktu_azan + timedelta(minutes=durasi)
+                    waktu_format_azan = f"{waktu_azan.strftime('%H:%M')} - {waktu_azan_beres.strftime('%H:%M')}"
                     table.add_row(f"{label} (break)", waktu_format_azan, "☐", style="warna")
-                    list_sesi.append((f"{label} (break)", jam_selesai_1, waktu_azan_beres, False))
+                    list_sesi.append((f"{label} (break)", waktu_azan, waktu_azan_beres, False))
                     row_index += 1
                     current_time = waktu_azan_beres
                     sisa = istirahat - sebelum_azan
@@ -274,7 +272,7 @@ for hari, materi_hari_ini in enumerate(grup_materi, 1):
             show_lines=True,
             border_style="white"
         )
-        table.add_column("Kegiatan", header_style="warna", justify="left", no_wrap=True)
+        table.add_column("Kegiatan", header_style="warna", justify="left", no_wrap=False)
         table.add_column("Waktu", header_style="warna", justify="center")
         table.add_column("Ceklis", header_style="warna", justify="center")
         for k, mulai, selesai_waktu, s in list_sesi:
