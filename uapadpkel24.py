@@ -93,9 +93,7 @@ def cek_ada_azan_di_tengah(start_time, durasi):
     hasil = []
     end_time = start_time + timedelta(minutes=durasi)
     for waktu_str, (label, durasi_azan) in jadwal_break.items():
-        waktu_obj = datetime.strptime(waktu_str, "%H:%M").replace(
-            year=start_time.year, month=start_time.month, day=start_time.day
-        )
+        waktu_obj = datetime.strptime(waktu_str, "%H:%M")
         if start_time < waktu_obj < end_time:
             hasil.append((waktu_obj, label, durasi_azan))
     return hasil if hasil else None
@@ -153,25 +151,17 @@ if 75 <= nilai_uts <= 100:
     pola = [(belajar_menit, break_menit)]
     print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}. {pola[0][0]} menit belajar kemudian {pola[0][1]} menit break")
 elif 50 <= nilai_uts < 75:
-    if waktu_per_materi == 60:
-        pola = [(25, 5), (25, 5)]
-        print("Kita akan gunakan pola belajar 25-5-25-5. 25 menit pertama akan digunakan untuk belajar. Lalu 5 menit setelahnya istirahat. Setelahnya, lanjut lagi belajar 25 menit, kemudian istirahat lagi 5 menit")
-    else:
-        belajar = int((25/60)*waktu_per_materi)
-        istirahat = int((5/60)*waktu_per_materi)
-        pola = [(belajar, istirahat), (belajar, istirahat)]
-        print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}-{pola[1][0]}-{pola[1][1]}. {pola[0][0]} menit pertama akan digunakan untuk belajar. Lalu {pola[0][1]} menit setelahnya istirahat. Setelahnya, lanjut lagi belajar {pola[1][0]} menit, kemudian istirahat lagi {pola[1][1]} menit")
+    belajar = waktu_per_materi * 25 // 60
+    istirahat = waktu_per_materi * 5 // 60
+    pola = [(belajar, istirahat), (belajar, istirahat)]
+    print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}-{pola[1][0]}-{pola[1][1]}. {pola[0][0]} menit pertama akan digunakan untuk belajar. Lalu {pola[0][1]} menit setelahnya istirahat. Setelahnya, lanjut lagi belajar {pola[1][0]} menit, kemudian istirahat lagi {pola[1][1]} menit")
 else:
-    if waktu_per_materi == 60:
-        pola = [(25, 5), (20, 10)]
-        print("Kita akan gunakan pola belajar 25-5-20-10. 25 menit pertama akan digunakan untuk belajar. Lalu 5 menit setelahnya istirahat. Setelahnya, lanjut belajar 20 menit, kemudian istirahat 10 menit")
-    else:
-        belajar1 = int((25/60)*waktu_per_materi)
-        istirahat1 = int((5/60)*waktu_per_materi)
-        belajar2 = int((20/60)*waktu_per_materi)
-        istirahat2 = int((10/60)*waktu_per_materi)
-        pola = [(belajar1, istirahat1), (belajar2, istirahat2)]
-        print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}-{pola[1][0]}-{pola[1][1]}. {pola[0][0]} menit pertama akan digunakan untuk belajar. Lalu {pola[0][1]} menit setelahnya istirahat. Setelahnya, lanjut belajar {pola[1][0]} menit, kemudian istirahat {pola[1][1]} menit")
+    belajar1 = waktu_per_materi * 25 // 60
+    istirahat1 = waktu_per_materi * 5 // 60
+    belajar2 = waktu_per_materi * 20 // 60
+    istirahat2 = waktu_per_materi * 10 // 60
+    pola = [(belajar1, istirahat1), (belajar2, istirahat2)]
+    print(f"Kita akan gunakan pola belajar {pola[0][0]}-{pola[0][1]}-{pola[1][0]}-{pola[1][1]}. {pola[0][0]} menit pertama akan digunakan untuk belajar. Lalu {pola[0][1]} menit setelahnya istirahat. Setelahnya, lanjut belajar {pola[1][0]} menit, kemudian istirahat {pola[1][1]} menit")
 # Input jam mulai
 console.print("Sekarang ayo kita atur jam mulai belajar Hari 1.", style="cyan")
 jam_mulai_str = input("Masukkan jam mulai belajar Hari 1 (format Jam:Menit, contoh 08:00): ")
